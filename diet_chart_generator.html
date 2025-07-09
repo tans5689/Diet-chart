@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Diet Chart Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f8ff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #004080;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    textarea {
+      resize: vertical;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #005f99;
+    }
+    .preview {
+      margin-top: 30px;
+      background: #e6f2ff;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .meal-entry {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Diet Chart Generator</h1>
+
+    <label>Client Name:</label>
+    <input type="text" id="name">
+
+    <label>Age:</label>
+    <input type="number" id="age">
+
+    <label>Gender:</label>
+    <input type="text" id="gender">
+
+    <label>Breakfast:</label>
+    <textarea id="breakfast"></textarea>
+
+    <label>Lunch:</label>
+    <textarea id="lunch"></textarea>
+
+    <label>Snacks:</label>
+    <textarea id="snacks"></textarea>
+
+    <label>Dinner:</label>
+    <textarea id="dinner"></textarea>
+
+    <button onclick="generatePreview()">Update Chart</button>
+    <button onclick="downloadPDF()">Download PDF</button>
+
+    <div class="preview" id="preview" style="display:none;">
+      <h2>Preview</h2>
+      <p><strong>Name:</strong> <span id="pName"></span></p>
+      <p><strong>Age:</strong> <span id="pAge"></span></p>
+      <p><strong>Gender:</strong> <span id="pGender"></span></p>
+
+      <div class="meal-entry"><strong>Breakfast:</strong> <p id="pBreakfast"></p></div>
+      <div class="meal-entry"><strong>Lunch:</strong> <p id="pLunch"></p></div>
+      <div class="meal-entry"><strong>Snacks:</strong> <p id="pSnacks"></p></div>
+      <div class="meal-entry"><strong>Dinner:</strong> <p id="pDinner"></p></div>
+    </div>
+  </div>
+
+  <!-- jsPDF library for PDF download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    function generatePreview() {
+      document.getElementById('pName').innerText = document.getElementById('name').value;
+      document.getElementById('pAge').innerText = document.getElementById('age').value;
+      document.getElementById('pGender').innerText = document.getElementById('gender').value;
+      document.getElementById('pBreakfast').innerText = document.getElementById('breakfast').value;
+      document.getElementById('pLunch').innerText = document.getElementById('lunch').value;
+      document.getElementById('pSnacks').innerText = document.getElementById('snacks').value;
+      document.getElementById('pDinner').innerText = document.getElementById('dinner').value;
+
+      document.getElementById('preview').style.display = 'block';
+    }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      const name = document.getElementById('name').value;
+      const age = document.getElementById('age').value;
+      const gender = document.getElementById('gender').value;
+      const breakfast = document.getElementById('breakfast').value;
+      const lunch = document.getElementById('lunch').value;
+      const snacks = document.getElementById('snacks').value;
+      const dinner = document.getElementById('dinner').value;
+
+      doc.setFontSize(16);
+      doc.text("Diet Chart", 90, 15);
+
+      doc.setFontSize(12);
+      doc.text(`Name: ${name}`, 10, 30);
+      doc.text(`Age: ${age}`, 10, 40);
+      doc.text(`Gender: ${gender}`, 10, 50);
+
+      doc.text("Breakfast:", 10, 70);
+      doc.text(breakfast, 20, 80, { maxWidth: 180 });
+
+      doc.text("Lunch:", 10, 100);
+      doc.text(lunch, 20, 110, { maxWidth: 180 });
+
+      doc.text("Snacks:", 10, 130);
+      doc.text(snacks, 20, 140, { maxWidth: 180 });
+
+      doc.text("Dinner:", 10, 160);
+      doc.text(dinner, 20, 170, { maxWidth: 180 });
+
+      doc.save(`${name}_Diet_Chart.pdf`);
+    }
+  </script>
+
+</body>
+</html>
